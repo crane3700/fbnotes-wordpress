@@ -46,9 +46,13 @@ foreach($string as $items)
         $realLocation = get_headers($shortlink,1);
         $fulllink =  $shortlink;
         $html = file_get_html($fulllink);
+         
+        $page = $html->find('a[class=_2yug]', 0);
+        $page = $page->plaintext;
+            
         $html = $html->find('div[id=content]', 0);
         $title = $html->find('div[class=_4lmk _5s6c]', 0);
-        $title = $title->plaintext;
+        $title =  "(".$page.")".$title->plaintext;
         $bgimg = $html->find('div[class=_5bdz]', 0);
         $bgimg = html_entity_decode($bgimg);
         preg_match('#\((.*?)\)#', $bgimg, $match);

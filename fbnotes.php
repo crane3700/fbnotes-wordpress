@@ -83,11 +83,7 @@ if (!empty($ids)) {
     $maxid = max($ids);
     file_put_contents($currdir, $maxid);
 }
-}
-add_action('init', 'createpostfromnote');
-?>
-
-
+echo "
 <style>
 .fb_content div{
 background-repeat: no-repeat;
@@ -107,6 +103,13 @@ background-size: cover;
 /*height:100%;*/
 }
 ._3uhg, ._39k2{display:none}
-</style>
+._5bdz{
+    background-image: transparent!important;
+    padding-bottom: initial!important;
+
+}
+</style>";
+}
+add_action('init', 'createpostfromnote');
 
 

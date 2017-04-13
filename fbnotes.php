@@ -52,7 +52,7 @@ foreach($string as $items)
             
         $html = $html->find('div[id=content]', 0);
         $title = $html->find('div[class=_4lmk _5s6c]', 0);
-        $title =  "(".$page.")".$title->plaintext;
+        $title =  "(".$page.") ".$title->plaintext;
         $bgimg = $html->find('div[class=_5bdz]', 0);
         $bgimg = html_entity_decode($bgimg);
         preg_match('#\((.*?)\)#', $bgimg, $match);

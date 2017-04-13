@@ -1,7 +1,7 @@
 <?php
 /**
  * @package FBNotes
- * @version 1.0
+ * @version 1.6
  */
 /*
 Plugin Name: FBNotes
@@ -15,17 +15,17 @@ require_once('simple_html_dom.php');
 function createpostfromnote()
 {
 $settings = array(
-    'oauth_access_token' => "YOUR OAUTH ACCESS TOKEN",
-    'oauth_access_token_secret' => "YOUR OAUTH ACCESS TOKEN SECRET",
-    'consumer_key' => "YOUR CONSUMER KEY",
-    'consumer_secret' => "YOUR CONSUMER SECRET"
+    'oauth_access_token' => "token",
+    'oauth_access_token_secret' => "token_secret",
+    'consumer_key' => "consumer_key",
+    'consumer_secret' => "consumer_secret"
 );
 $currdir = WP_PLUGIN_DIR."/fbnotes/tweets.txt";
 $ids=array();
 $sinceid = file_get_contents($currdir);
 $url = "https://api.twitter.com/1.1/statuses/user_timeline.json";
 $requestMethod = "GET";
-$getfield = "?q=screen_name=twitterhandle&since_id=$sinceid";
+$getfield = "?q=screen_name=handle&since_id=$sinceid";
 $twitter = new TwitterAPIExchange($settings);
 $twitter = new TwitterAPIExchange($settings);
 $string = json_decode($twitter->setGetfield($getfield)
@@ -49,10 +49,20 @@ foreach($string as $items)
         $html = $html->find('div[id=content]', 0);
         $title = $html->find('div[class=_4lmk _5s6c]', 0);
         $title = $title->plaintext;
+        $bgimg = $html->find('div[class=_5bdz]', 0);
+        $bgimg = html_entity_decode($bgimg);
+        preg_match('#\((.*?)\)#', $bgimg, $match);
+        $bgimg= $match[1];
+//file_put_contents(WP_PLUGIN_DIR."/".$title.".html", $bgimg);
+        $bg = "<img class='noteheaderimg' src='$bgimg'>";
+        $html = $html;
+        foreach($html->find('div[class=_5bdz]') as $div) {
+            $div->innertext = $bg;
+        }
         $new_post = array(
             'post_title'    => $title,
             'post_content'  => $html,
-            'post_status'   => 'publish',
+            'post_status'   => 'draft',
             'post_date'     => date( 'Y-m-d H:i:s' ),
             'post_author'   => 'test',
             'post_type'     => 'post',
@@ -79,8 +89,18 @@ add_action('init', 'createpostfromnote');
 background-repeat: no-repeat;
 background-size: cover;
 }
+
+.noteheaderimg{
+    width: 610px;
+    height: 380px;
+}
+
+.fb_content ._2cuy{
+    margin: 1em;
+}
+
 .fb_content ._5bdz{
-height:100%;
+/*height:100%;*/
 }
 ._3uhg, ._39k2{display:none}
 </style>
